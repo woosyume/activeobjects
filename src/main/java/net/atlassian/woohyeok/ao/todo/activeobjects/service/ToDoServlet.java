@@ -2,7 +2,6 @@ package net.atlassian.woohyeok.ao.todo.activeobjects.service;
 
 import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import net.atlassian.woohyeok.ao.todo.activeobjects.entity.Todo;
 
@@ -24,12 +23,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Scanned
 public class ToDoServlet extends HttpServlet {
 
-    @ComponentImport
-    private final ActiveObjects ao;
+    private final ToDoService toDoService;
 
     @Inject
-    public ToDoServlet(ActiveObjects ao) {
-        this.ao = checkNotNull(ao);
+    public ToDoServlet(ToDoService toDoService) {
+        this.toDoService = checkNotNull(toDoService);
     }
 
     @Override
@@ -46,7 +44,7 @@ public class ToDoServlet extends HttpServlet {
 
         w.write("<ol>");
 
-        ao.executeInTransaction(new TransactionCallback<Void>() // (1)
+/*        ao.executeInTransaction(new TransactionCallback<Void>() // (1)
         {
             public Void doInTransaction() {
                 for (Todo todo : ao.find(Todo.class)) // (2)
@@ -55,7 +53,12 @@ public class ToDoServlet extends HttpServlet {
                 }
                 return null;
             }
-        });
+        });*/
+
+        for (Todo todo : toDoService.all()) {
+            w.printf("<li><%2$s> %s </%2$s></li>", todo.getDescription(), todo.isComplete() ? "strike" : "strong");
+        }
+
         w.write("</ol>");
         w.write("<script language='javascript'>document.forms[0].elements[0].focus();</script>");
 
@@ -65,7 +68,7 @@ public class ToDoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String description = req.getParameter("task");
-        ao.executeInTransaction(new TransactionCallback<Todo>() {
+/*        ao.executeInTransaction(new TransactionCallback<Todo>() {
             public Todo doInTransaction() {
                 final Todo todo = ao.create(Todo.class);
                 todo.setDescription(description);
@@ -73,7 +76,8 @@ public class ToDoServlet extends HttpServlet {
                 todo.save();
                 return todo;
             }
-        });
+        });*/
+        toDoService.add(description);
         resp.sendRedirect(req.getContextPath() + "/plugins/servlet/todo/list");
     }
 
