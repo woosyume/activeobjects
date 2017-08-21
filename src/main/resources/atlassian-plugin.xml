@@ -20,5 +20,19 @@
 
         <context>activeobjects</context>
     </web-resource>
-    
+
+    <!-- import from the product container -->
+<!--
+    <component-import key="activeObject" interface="net.atlassian.woohyeok.ao.todo.activeobjects.entity.Todo"/>
+-->
+
+    <ao key="ao-module">
+        <description>The module configuring the Active Objects service used by this plugin</description>
+        <entity>net.atlassian.woohyeok.ao.todo.activeobjects.entity.Todo</entity>
+    </ao>
+
+    <servlet name="Todo List &amp; Add Servlet" class="net.atlassian.woohyeok.ao.todo.activeobjects.service.ToDoServlet" key="todo-list">
+        <description>A servlet to add and list todos</description>
+        <url-pattern>/todo/list</url-pattern>
+    </servlet>
 </atlassian-plugin>
