@@ -39,8 +39,9 @@ public class ToDoServlet extends HttpServlet {
         w.write("<form method=\"post\">");
         w.write("<input type=\"text\" name=\"task\" size=\"25\"/>");
         w.write("&nbsp;&nbsp;");
-        w.write("<input type=\"submit\" name=\"submit\" value=\"Add\"/>");
+        w.write("<div><input type=\"submit\" name=\"submit\" style=\"float:left\" value=\"Add\"/></div>");
         w.write("</form>");
+        w.write("<div><input type=\"submit\" name=\"submit\" style=\"float:left\"  value=\"Complete\"/></div>");
 
         w.write("<ol>");
 
@@ -56,7 +57,7 @@ public class ToDoServlet extends HttpServlet {
         });*/
 
         for (Todo todo : toDoService.all()) {
-            w.printf("<li><%2$s> %s </%2$s></li>", todo.getDescription(), todo.isComplete() ? "strike" : "strong");
+            w.printf("<li><%2$s> %s </%2$s><input type=\"checkbox\" name=\"check\"/></li>", todo.getDescription(), todo.isComplete() ? "strike" : "strong");
         }
 
         w.write("</ol>");
